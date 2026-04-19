@@ -19,7 +19,7 @@ public class FIFOPageReplacementLab {
                     		int victim = queue.poll();
 				pagesInMemory.remove(victim);
 			}
-			queue.add(page);
+			queue.offer(page);
 			pagesInMemory.add(page);
        		}
         }
