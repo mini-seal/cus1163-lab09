@@ -3,6 +3,7 @@ import java.util.*;
 public class FIFOPageReplacementLab {
 
     public static int[] simulateFIFO(int[] referenceString, int numFrames) {
+
         int pageFaults = 0;
         int pageHits = 0;
 
