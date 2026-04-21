@@ -10,7 +10,7 @@
 
     A Queue is used to track the order of pages, which is essential to this FIFO simulator. It tracks which page is the oldest and 
     will be the first to be removed when space is needed. The Set is used to quickly check whether a page is in memory. The two data 
-    structures work together to make the system more efficient at run time. If we were to use only a queue to check whether a page is 
+    structures work together to make the system more efficient at run time. If we used only a queue to check whether a page is 
     already loaded into memory, we would have to traverse the entire queue, which would take at worst O(n) time. Using a set, we can 
     bring the check time to O(1). 
 
