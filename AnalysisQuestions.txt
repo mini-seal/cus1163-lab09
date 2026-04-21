@@ -1,0 +1,44 @@
+1. Belady's Anomaly: In Test Case 2, why does adding a 4th frame cause MORE page faults than having only 3 frames? This seems counterintuitive. 
+
+    Adding more frames means we can keep pages in memory longer, but in FIFO this does not necessarily lead to fewer page faults. 
+    The FIFO algorithm always removes the page that was loaded first when space is needed. Regardless of the number of frames, 
+    once memory is full, the oldest page is evicted. Increasing the number of frames changes the timing of evictions, potentially 
+    causing frequently used pages to be removed at non-optimal times, leading to more page faults. FIFO does not account for how 
+    frequently a page is used, which can lead to Belady's Anomaly. 
+
+2.Data Structures: Why do we need both a Queue AND a Set? What would happen if we only used a Queue? 
+
+    A Queue is used to track the order of pages, which is essential to this FIFO simulator. It tracks which page is the oldest and 
+    will be the first to be removed when space is needed. The Set is used to quickly check whether a page is in memory. The two data 
+    structures work together to make the system more efficient at run time. If we were to use only a queue to check whether a page is 
+    already loaded into memory, we would have to traverse the entire queue, which would take at worst O(n) time. Using a set, we can 
+    bring the check time to O(1). 
+
+3. Performance: If memory access takes 200 nanoseconds and a page fault takes 8 milliseconds, calculate the effective access time for Test Case 1 with 3 frames. 
+    
+    EAT = (1-p) × memory_access + p × page_fault_time 
+    EAT = (1-.75)x200ns + .75x8000000ns 
+    EAT = 6,000,050 ns = 6.00005 ms 
+
+4. Pattern Analysis: Which test case had the worst performance with 3 frames? Why did that particular access pattern cause so many page faults? 
+
+    Test Case 3: Looping pattern resulted in the worst performance, with a Fault rate of 100% over 3 frames. This access pattern caused 
+    so many page faults because, for every page it evicted to add a new page, the next page to add was the one it just evicted. The test 
+    only holds 3 of the 4 needed pages. Every time we access the 4th page, we evict the page we need next.   
+
+    Reference String: [1, 2, 3, 4, 1, 2, 3, 4]
+    Page 1 -> fault -> Frames[1]  
+    Page 2 -> fault -> Frames[1,2] 
+    Page 3 -> fault -> Frames[1,2,3] 
+    Page 4 -> fault -> Frames[2,3,4] (replaced 1) 
+    Page 1 -> fault -> Frames[3,4,1] (replaced 2) 
+    Page 2 -> fault -> Frames[4,1,2] (replaced 3) 
+    Page 3 -> fault -> Frames[1,2,3] (replaced 4) 
+    Page 4 -> fault -> Frames[2,3,4] (replaced 1) 
+
+5. Real World: Based on your observations, why do you think modern operating systems don't use pure FIFO for page replacement? 
+
+    FIFO page replacement is too simple and not adaptable enough to modern operating system demands. Its main problems are that it ignores 
+    patterns of page usage and can suffer from Belady’s Anomaly, where increasing the number of frames may actually increase the page fault 
+    rate. It is also prone to thrashing, as shown in test case 3. Modern operating systems use smarter algorithms, such as LRU, which track 
+    page usage patterns and evict the page that has not been used for the longest time, in turn reducing page faults more efficiently. 
